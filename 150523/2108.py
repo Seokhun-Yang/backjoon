@@ -1,43 +1,48 @@
 import sys
 
+non = int(sys.stdin.readline().rstrip())
 numList = []
+dic = {}
 sumOfNum = 0
 
-for _ in range(int(sys.stdin.readline().rstrip())):
+for _ in range(non):
     number = int(sys.stdin.readline().rstrip())
     numList.append(number)
     sumOfNum += number
 
-numList.sort()
-
-aver = round(sumOfNum / len(numList))
-median = numList[round(len(numList) / 2)]
-ran = numList[len(numList) - 1] - numList[0]
-
-dic = {}
-
-for num in numList:
-    if num in dic:
-        dic[num] = dic[num] + 1
+    if number in dic:
+        dic[number] = dic[number] + 1
         continue
-    dic[num] = 1
+    dic[number] = 1
 
+numList.sort()
+aver = round(sumOfNum / non)
+median = numList[round(non / 2)]
+ran = numList[non - 1] - numList[0]
 sortedDic = sorted(dic.items(), key=lambda x: x[1], reverse=True)
 modeList = []
+previousValue = None
+pendingKey = 0
+pendingValue = 0
+numberOfMode = 0
 
 for k, v in sortedDic:
-    for k2, v2 in sortedDic:
-        if len(sortedDic) < 3:
-            if v > v2:
-                modeList.append(k)
-                continue
-        if k == k2 or k2 in modeList:
-            continue
-        if v == v2:
-            modeList.append(k2)
+    if previousValue is None:
+        pendingKey = k
+        pendingValue = v
+
+    if previousValue == v:
+        modeList.append(k)
+        numberOfMode = v
+        continue
+
+    previousValue = v
+
+if pendingValue == numberOfMode:
+    modeList.append(pendingKey)
 
 modeList.sort()
-mode = int
+mode = 0
 
 if len(modeList) == 1:
     mode = modeList[0]
